@@ -6,7 +6,7 @@ BIN = bfi
 
 all: $(BIN)
 
-bfi: $(SRC)/$@.cpp
+bfi: $(SRC)/bfi.cpp
 	$(CC) $(CFLAGS) $< -o $(BUILD)/$@.o 
 
 # build everything .cpp in src
