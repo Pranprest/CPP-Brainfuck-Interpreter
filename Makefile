@@ -16,5 +16,7 @@ bfi: $(SRC)/bfi.cpp
 clean: $(BUILD)/*.o
 	rm $(BUILD)/*.o || echo "Error: No output files found." && echo "Removed!"
 
-run: $(BUILD)/bfi.o
+run: bfi exec 
+	
+exec: $(BUILD)/bfi.o
 	$<
