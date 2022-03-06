@@ -1,4 +1,7 @@
 build/
-*.asm
+*.o
 *.out
-.vscode
+*.obj
+.*
+!.editorconfig
+!.gitignore
