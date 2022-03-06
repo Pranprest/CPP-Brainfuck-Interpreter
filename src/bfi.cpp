@@ -3,102 +3,61 @@
     @file bfi.cpp bfi.hpp
     @author Pranprest
 */
-#include <iostream>
-#include <vector>
-#include <memory>
-#include <stack>
 #include "bfi.hpp"
+#include <sys/stat.h>
+#include <fstream>
 
-#define curr_cell cells[cell_pointer]
-#define curr_watched_cell watched_cells[recursion - 1]
-#define curr_nested_instructions nested_instructions[recursion - 1]
-
-#define DEBUG
+// #define DEBUG
 
 
-class BFEnvironment {
-    private: 
-        std::deque<unsigned char> cells = {0};
-        std::vector<int> watched_cells = {0};
-        unsigned short int cell_pointer = 0;
-        unsigned short int recursion = 0;
+bool check_file_exists(const std::string& filename) {
+    // Make a buffer
+    struct stat buffer;
+    // If there isn't any file info in (filename), return false   
+    return (stat(filename.c_str(), &buffer) == 0); 
+}
 
-    public: 
+// Read file and output every single character to a vector
+std::string get_bf_str(const std::string& filename) {
+    std::fstream coolfile(filename);
+    std::string allowed_instructions = "+-.,><[]";
+    std::string main_str;
 
-        void parse_string(std::string base_string) {
-            // Treat string as instruction stack
-            parse_stack(bfi::str_to_stack(base_string));
-        }
-        
-        // Parses a brainfuck stack 
-        void parse_stack(std::stack<char> instruction_stack) {
-            // used to identify the function's execution stack 
-            recursion++;
-            std::string nested_instructions = "";
-            int matching_bracket; // declared here because switch cases don't like variable declarations.
-
-            // Parse every instruction in order and pop when done with it
-            while(!instruction_stack.empty()) {
-                switch(instruction_stack.top()) {
-                    case '>':
-                        if(cell_pointer == cells.size() - 1) {
-                            cells.push_back(0);
-                        } 
-                        cell_pointer++;
-                        break;
-                    case '<':
-                        if(cell_pointer == 0) {
-                            cells.push_front(0);
-                        } 
-                        cell_pointer--;
-                        break;
-                    case '+':
-                        curr_cell++;
-                        break;
-                    case '-':
-                        curr_cell--;
-                        break;
-                    case '.':
-                        std::cout << curr_cell << std::flush;
-                        break;
-                    case ',':
-                        std::cin >> std::skipws >> curr_cell;
-                        break;
-                    case '[':
-                        // Get every instruction between matching loops n loop them until curr_cell = 0
-                        curr_watched_cell = cell_pointer;
-
-                        // Get every instruction between brackets
-                        // gets ([) then adds 1 -> (start of the nested instructions)
-                        // Pop instructions between [] when done interpreting them
-                        // +1 -> the actual bracket position.
-                        matching_bracket = bfi::find_matching_brackets(instruction_stack) + 1;
-                        // Ignore [
-                        instruction_stack.pop();
-                        for (int i = 0; i <= matching_bracket - 2; i++) {
-                            nested_instructions.push_back(instruction_stack.top());
-                            instruction_stack.pop();
-                        }
-
-                        while (cells[curr_watched_cell] > 0) {
-                            parse_string(nested_instructions);
-                        }
-                        nested_instructions = "";
-                    default:
-                        break;
-                }
-                instruction_stack.pop();
+    char c;
+    if (coolfile.is_open()) {
+        while(coolfile.get(c)) {
+            // Only get allowed characters!!
+            if(allowed_instructions.find(c) != std::string::npos) {
+                main_str.push_back(c);
             }
-            recursion--;
         }
-};
+        coolfile.close();
+    }
+    return main_str;
+}
 
+int main(int argc, const char** argv) {
+    #ifdef DEBUG
+        argc = 2;
+        argv[1] = "../sample/hi.bf";
+    #endif
 
-int main() {
-    // Hi!
-    BFEnvironment bfmain;
-    bfmain.parse_string("++++++++[>+++++++++<-]>.>++++++++++[>++++++++++<-]>+++++.>+++[>+++++++++++<-]>.");
-    return 0;
+    if (argc <= 1) {
+        std::cout << "Usage: " << argv[0] << " [filename]" << std::endl;
+        return EXIT_SUCCESS;
+    } else {
+        if (check_file_exists(argv[1]) == true) {
+            // std::cout << "file exists" << '\n';
+            // filter_bf_chars(coolstr);
+            bfi::BFEnvironment bfmain;
+            bfmain.parse_string(get_bf_str(argv[1]));
+            std::cout << std::endl;
+            return EXIT_SUCCESS;
+        } else {
+            std::cout << "File does not exist (or is not valid)" << '\n';
+            return EXIT_FAILURE;
+        }
+    }
 }
 
 
