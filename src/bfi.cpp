@@ -39,18 +39,18 @@ std::string get_bf_str(const std::string& filename) {
 int main(int argc, const char** argv) {
     #ifdef DEBUG
         argc = 2;
-        argv[1] = "../sample/hi.bf";
+        argv[1] = "../sample/echo.bf";
     #endif
 
     if (argc <= 1) {
-        std::cout << "Usage: " << argv[0] << " [filename]" << std::endl;
+        std::cout << "Usage: " << argv[0] << " [filename]" << std::endl << '\n';
+        std::cout << "[filename] must be a brainfuck file!" << std::endl;
         return EXIT_SUCCESS;
     } else {
         if (check_file_exists(argv[1]) == true) {
             // std::cout << "file exists" << '\n';
             // filter_bf_chars(coolstr);
-            bfi::BFEnvironment bfmain;
-            bfmain.parse_string(get_bf_str(argv[1]));
+            bfi::parse_string(get_bf_str(argv[1]));
             std::cout << std::endl;
             return EXIT_SUCCESS;
         } else {

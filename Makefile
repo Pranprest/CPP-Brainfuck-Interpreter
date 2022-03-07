@@ -14,7 +14,7 @@ clean: $(BUILD)/*.o
 
 run: bfi exec 
 	
-exec: $(BUILD)/bfi.o 
+exec: $(BUILD)/bfi
 	$< $(ARGS)
 
 release: $(SRC)/bfi.cpp $(SRC)/bfi.hpp
