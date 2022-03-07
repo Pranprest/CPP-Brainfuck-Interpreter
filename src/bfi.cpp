@@ -9,7 +9,6 @@
 
 // #define DEBUG
 
-
 bool check_file_exists(const std::string& filename) {
     // Make a buffer
     struct stat buffer;
@@ -43,18 +42,16 @@ int main(int argc, const char** argv) {
     #endif
 
     if (argc <= 1) {
-        std::cout << "Usage: " << argv[0] << " [filename]" << std::endl << '\n';
+        std::cout << "Usage: " << argv[0] << " [filename]" << '\n';
         std::cout << "[filename] must be a brainfuck file!" << std::endl;
         return EXIT_SUCCESS;
     } else {
         if (check_file_exists(argv[1]) == true) {
-            // std::cout << "file exists" << '\n';
-            // filter_bf_chars(coolstr);
-            bfi::parse_string(get_bf_str(argv[1]));
+            bfi::interpret_bf_str(get_bf_str(argv[1]));
             std::cout << std::endl;
             return EXIT_SUCCESS;
         } else {
-            std::cout << "File does not exist (or is not valid)" << '\n';
+            std::cout << "File does not exist (or is not valid)" << std::endl;
             return EXIT_FAILURE;
         }
     }
