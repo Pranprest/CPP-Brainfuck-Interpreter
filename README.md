@@ -1,5 +1,5 @@
-# B.B.F.I.
-A (very) Bad Brain Fu*ck Interpreter!
+# C.B.F.I.
+A Bad Brain F*ck Interpreter written in C++!
 - I (pranprest) don't have any kind of experience with the C++ programing language, so, this project will, most likely, be incredibly bad and un-optimized
 - This project was made so that i'd learn a bit better how C++ works! It has already served it's purpose, so maybe i'll not update it that much anymore
 
