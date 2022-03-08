@@ -38,12 +38,12 @@ std::string get_bf_str(const std::string& filename) {
 int main(int argc, const char** argv) {
     #ifdef DEBUG
         argc = 2;
-        argv[1] = "../sample/echo.bf";
+        argv[1] = "../sample/hi.bf";
     #endif
 
     if (argc <= 1) {
         std::cout << "Usage: " << argv[0] << " [filename]" << '\n';
-        std::cout << "[filename] must be a brainfuck file!" << std::endl;
+        std::cout << "  [filename] must be a brainfuck file!" << std::endl;
         return EXIT_SUCCESS;
     } else {
         if (check_file_exists(argv[1]) == true) {
