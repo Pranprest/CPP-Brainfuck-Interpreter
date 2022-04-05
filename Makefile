@@ -6,16 +6,16 @@ BIN = bfi
 
 all: $(BIN)
 
-bfi: $(SRC)/bfi.cpp $(SRC)/bfi.hpp
-	$(CC) $(CFLAGS) $< -o $(BUILD)/$@.o 
+bfi: $(SRC)/$(BIN).cpp $(SRC)/$(BIN).hpp
+	mkdir -p ./build/ && $(CC) $(CFLAGS) $< -o $(BUILD)/$@
 
 clean: $(BUILD)/*.o
 	rm $(BUILD)/*.o || echo "Error: No output files found." && echo "Cleaned!"
 
 run: bfi exec 
 	
-exec: $(BUILD)/bfi
+exec: $(BUILD)/$(BIN)
 	$< $(ARGS)
 
-release: $(SRC)/bfi.cpp $(SRC)/bfi.hpp
-	$(CC) $(CFLAGS) -O2 $< -o $(BUILD)/bfi
+release: $(SRC)/$(BIN).cpp $(SRC)/$(BIN).hpp
+	$(CC) $(CFLAGS) -O3 $< -o $(BUILD)/$(BIN)

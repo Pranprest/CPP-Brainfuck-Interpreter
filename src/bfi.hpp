@@ -1,7 +1,8 @@
 #include <iostream>
 #include <stack>
 
-#define curr_cell cells.at(cell_pointer)
+// Use .at(cell_pointer) here for better memory safety
+#define curr_cell cells[cell_pointer]
 
 // This whole namespace is basically just solutions to things that I didn't find in the C++ STL
 namespace bfi {
@@ -37,7 +38,7 @@ namespace bfi {
         return char_stack;
     }
 
-    std::string stack_to_str(std::stack<uint_least8_t> &base_stack) {
+    std::string stack_to_str(std::stack<uint_least8_t> base_stack) {
         std::string end_str;
         while(!base_stack.empty()) {
             end_str.push_back(base_stack.top());
@@ -46,15 +47,13 @@ namespace bfi {
         return end_str;
     }
 
+    // Interprets a (valid) Brainfuck and all its operations.
     void interpret_bf_str(const std::string &bf_string) {
         static std::deque<uint_least8_t> cells = {0};
-        static uint32_t cell_pointer = 0;
-        static uint32_t recursion = 0;
-        std::stack<uint_least8_t> instruction_stack = bfi::str_to_stack(bf_string);
-        // used to identify the function's execution stack 
-        recursion++;
+        static uint32_t cell_pointer(0);
+        std::stack<uint_least8_t> instruction_stack(bfi::str_to_stack(bf_string));
         // declared here because switch cases don't like variable declarations.
-        std::string nested_instructions = "";
+        std::string nested_instructions("");
         int matching_bracket; 
 
         // Parse every instruction in order and pop when done with it
@@ -86,26 +85,21 @@ namespace bfi {
                     break;
                 case '[':
                     // Get every element between brackets (] - 1!)
-                    matching_bracket = bfi::find_matching_brackets(instruction_stack);
+                    matching_bracket = bfi::find_matching_brackets(instruction_stack) - 1;
                     instruction_stack.pop(); // DO NOT move this over "matching bracket" by any circumstance, or else everything will break!
-                    for (size_t i = 0; i <= matching_bracket - 1; i++) {
+                    for (size_t i = 0; i <= matching_bracket; i++) {
                         nested_instructions.push_back(instruction_stack.top());
                         instruction_stack.pop();
-                    }
-                    if(curr_cell == 0) {
-                        nested_instructions = "";
-                        break;
                     }
                     while (curr_cell > 0) {
                         bfi::interpret_bf_str(nested_instructions);
                     }
-                    nested_instructions = "";
+                    nested_instructions.clear();
                     break;
                 default:
                     break;
             }
             instruction_stack.pop();
         }
-        recursion--;
     }
 }
