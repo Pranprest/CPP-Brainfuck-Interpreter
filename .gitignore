@@ -1,8 +1,8 @@
 build/*
-!build/.gitkeep
 *.o
 *.out
 *.obj
 .*
+!build/.gitkeep
 !.editorconfig
 !.gitignore
